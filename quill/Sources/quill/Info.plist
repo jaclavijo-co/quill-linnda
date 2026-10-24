@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>co.linnda.quill</string>
+    <key>CFBundleName</key>
+    <string>Quill Linnda</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Quill graba tu micrófono durante las reuniones para transcribirlas y armar la nota.</string>
+    <key>NSAudioCaptureUsageDescription</key>
+    <string>Quill graba el audio del computador (el otro lado de la reunión) para transcribirlo y armar la nota.</string>
+</dict>
+</plist>

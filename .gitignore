@@ -1,0 +1,11 @@
+.build/
+.swiftpm/
+__pycache__/
+*.pyc
+dist/
+.env
+config.json
+clientes.json
+agenda.json
+cache/
+.DS_Store

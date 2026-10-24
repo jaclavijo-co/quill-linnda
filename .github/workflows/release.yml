@@ -1,0 +1,45 @@
+name: Compilar y publicar la pluma
+
+# Se dispara al crear una etiqueta vX.Y.Z (o a mano desde la pestaña Actions).
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Xcode más reciente
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Compilar (Apple Silicon + Intel)
+        working-directory: quill
+        run: |
+          swift --version
+          swift build -c release --triple arm64-apple-macosx15.0
+          swift build -c release --triple x86_64-apple-macosx15.0
+          mkdir -p ../dist
+          lipo -create \
+            .build/arm64-apple-macosx/release/quill \
+            .build/x86_64-apple-macosx/release/quill \
+            -output ../dist/quill
+          codesign --force --sign - --identifier co.linnda.quill ../dist/quill
+          lipo -info ../dist/quill
+          cd ../dist && tar -czf quill-macos.tar.gz quill && shasum -a 256 quill-macos.tar.gz | tee quill-macos.tar.gz.sha256
+
+      - name: Publicar release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('build-{0}', github.run_number) }}
+          make_latest: true
+          files: |
+            dist/quill-macos.tar.gz
+            dist/quill-macos.tar.gz.sha256
